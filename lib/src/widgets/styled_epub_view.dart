@@ -46,20 +46,24 @@ class StyledEpubView extends StatelessWidget {
         children: [
           const SizedBox(height: 12),
           Expanded(
-            child: EpubView(
-              controller: controller,
-              textAlign: config.textAlign,
-              textStyle: config.textStyle,
-              onDocumentLoaded: onDocumentLoaded,
-              selectionControls: CustomTextSelectionControls(
-                actions: actions,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: config.padding),
+              child: EpubView(
+                controller: controller,
+                textAlign: config.textAlign,
+                textStyle: config.textStyle,
+                onDocumentLoaded: onDocumentLoaded,
+                paragraphPadding: EdgeInsets.zero,
+                selectionControls: CustomTextSelectionControls(
+                  actions: actions,
+                ),
+                dividerBuilder: (chapter) => ChapterTitle(
+                  title: chapter.Title ?? '',
+                  textColor: config.fontColor,
+                ),
+                indent: config.indent,
+                paragraphGap: config.paragraphSpacing / 2,
               ),
-              dividerBuilder: (chapter) => ChapterTitle(
-                title: chapter.Title ?? '',
-                textColor: config.fontColor,
-              ),
-              indent: config.indent,
-              paragraphGap: config.paragraphSpacing / 2,
             ),
           ),
           const SizedBox(height: 4),
