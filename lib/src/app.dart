@@ -79,7 +79,6 @@ Future<List> _initializeAndroidApis() async {
       (await Permission.storage.request() == PermissionStatus.granted)) {
     final dir = await getExternalStorageDirectory();
     final path = join(dir!.parent.parent.parent.parent.path, 'Prowords');
-    print(path);
     final wordsApi = WordsApi(join(path, 'recents.txt'));
     final dictonaryApi = PersonalDictionaryApi(
       dbPath: join(path, 'dictionary.db'),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../utils/utils.dart';
-import '../models/models.dart';
 import '../api/api.dart';
 import 'epub_config_screen.dart';
 import 'home_screen.dart';
@@ -10,6 +9,7 @@ import 'word_meaning_screen.dart';
 import 'add_word_meaning_screen.dart';
 import 'epub_screen.dart';
 import 'app_drawer_screen.dart';
+import 'recent_words_screen.dart';
 
 class Screens {
   // Root
@@ -23,6 +23,7 @@ class Screens {
   static const EPUB_CONFIG = '/epub_config';
   static const SETTINGS = '/settings';
   static const WORDS = '/words';
+  static const RECENT_WORDS = '/recent_words';
 
   static Route? onGenerateRoute(RouteSettings settings) {
     print(
@@ -42,6 +43,7 @@ class Screens {
     HOME: (context, args) => HomeScreen(word: args as String?),
     LIBRARY: (context, args) => LibraryScreen(),
     RECENTS: (context, args) => RecentsScreen(),
+    RECENT_WORDS: (context, args) => RecentWordsScreen(),
     WORD_MEANING: (context, args) =>
         WordMeaningScreen(meaning: args as WordMeaning),
     ADD_WORD_MEANING: (context, args) =>

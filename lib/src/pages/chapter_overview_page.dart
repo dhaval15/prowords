@@ -15,9 +15,16 @@ class ChapterViewPage extends StatelessWidget {
     return ListView.builder(
       controller: controller,
       physics: BouncingScrollPhysics(),
-      itemCount: chapters.length,
+      itemCount: chapters.length + 1,
       itemBuilder: (context, index) {
-        final chapter = chapters[index];
+        if (index == 0)
+          return ListTile(
+            title: Text(
+              'Chapters',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          );
+        final chapter = chapters[index - 1];
         return ListTile(
           title: Text(chapter.title ?? '#$index'),
           onTap: () {

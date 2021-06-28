@@ -12,6 +12,7 @@ class EpubConfig {
   final TextAlign textAlign;
   final double lineHeight;
   final double paragraphSpacing;
+  final FontWeight fontWeight;
 
   static const defaultDark = EpubConfig(
     padding: 8,
@@ -24,6 +25,7 @@ class EpubConfig {
     textAlign: TextAlign.justify,
     lineHeight: 1.2,
     paragraphSpacing: 4,
+    fontWeight: FontWeight.normal,
   );
 
   static const defaultLight = EpubConfig(
@@ -37,6 +39,7 @@ class EpubConfig {
     textAlign: TextAlign.justify,
     lineHeight: 1.2,
     paragraphSpacing: 4,
+    fontWeight: FontWeight.normal,
   );
 
   const EpubConfig({
@@ -50,6 +53,7 @@ class EpubConfig {
     required this.textAlign,
     required this.lineHeight,
     required this.paragraphSpacing,
+    required this.fontWeight,
   });
 
   factory EpubConfig.fromJson(Map<String, dynamic> json) => EpubConfig(
@@ -63,6 +67,7 @@ class EpubConfig {
         textAlign: TextAlign.values[json['textAlign']],
         lineHeight: json['lineHeight'],
         paragraphSpacing: json['paragraphSpacing'],
+        fontWeight: FontWeight.values[json['fontWeight'] - 1],
       );
 
   EpubConfig copyWith({
@@ -76,6 +81,7 @@ class EpubConfig {
     TextAlign? textAlign,
     double? lineHeight,
     double? paragraphSpacing,
+    FontWeight? fontWeight,
   }) =>
       EpubConfig(
         padding: padding ?? this.padding,
@@ -88,6 +94,7 @@ class EpubConfig {
         textAlign: textAlign ?? this.textAlign,
         lineHeight: lineHeight ?? this.lineHeight,
         paragraphSpacing: paragraphSpacing ?? this.paragraphSpacing,
+        fontWeight: fontWeight ?? this.fontWeight,
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,6 +108,7 @@ class EpubConfig {
         'textAlign': textAlign.index,
         'lineHeight': lineHeight,
         'paragraphSpacing': paragraphSpacing,
+        'fontWeight': fontWeight.index + 1,
       };
 
   TextStyle get textStyle => fontFace == 'NONE'
@@ -108,10 +116,12 @@ class EpubConfig {
           color: fontColor,
           fontSize: fontSize,
           height: lineHeight,
+          fontWeight: fontWeight,
         )
       : GoogleFonts.asMap()[fontFace]!.call().copyWith(
             color: fontColor,
             fontSize: fontSize,
             height: lineHeight,
+            fontWeight: fontWeight,
           );
 }

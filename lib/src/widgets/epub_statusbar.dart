@@ -9,7 +9,7 @@ class EpubStatusbar extends StatelessWidget {
   final EpubController controller;
   final EpubBook book;
   final Color textColor;
-  final EpubMeta meta;
+  final ChapterMeta meta;
 
   final GestureTapCallback? onTapChapter;
   final GestureTapCallback? onTapBattery;
@@ -31,17 +31,21 @@ class EpubStatusbar extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final cv = snapshot.data!;
-          EpubCurrentMeta? currentMeta;
+          CurrentMeta? currentMeta;
           String percentage;
+          String? chapterHint;
           try {
-            currentMeta = EpubCurrentMeta.from(book, cv, meta);
+            currentMeta = CurrentMeta.from(book, cv, meta);
             percentage = ((currentMeta.currentPage / meta.totalPages) * 100)
                 .toStringAsFixed(1);
+            // percentage = '${currentMeta.currentPage}/${cMeta.totalPages}';
+            chapterHint =
+                ' (${currentMeta.currentPageInChapter}/${meta.find(cv.chapterNumber)?.totalPages})';
           } catch (e) {
             percentage = 'NA';
           }
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
             child: DefaultTextStyle(
               style: TextStyle(color: textColor, fontSize: 11),
               child: Row(
@@ -65,12 +69,8 @@ class EpubStatusbar extends StatelessWidget {
                           trim(cv.chapter?.Title ?? '', 20),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        currentMeta != null
-                            ? Text(
-                                ' (${currentMeta.currentPageInChapter}/${meta.chapterPages[cv.chapterNumber - 1]})',
-                                textScaleFactor: 0.9,
-                              )
-                            : Text('NA'),
+                        if (chapterHint != null)
+                          Text(chapterHint, textScaleFactor: 0.9),
                       ],
                     ),
                   ),

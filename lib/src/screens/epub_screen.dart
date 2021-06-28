@@ -3,8 +3,12 @@ import 'dart:io';
 
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:fullscreen/fullscreen.dart';
 import 'package:prowords/src/pages/pages.dart';
 import 'package:prowords/src/screens/epub_config_screen.dart';
+import 'package:prowords/src/styles/styles.dart';
 
 import '../api/api.dart';
 import '../models/models.dart';
@@ -31,7 +35,7 @@ class _EpubScreenState extends State<EpubScreen> {
   late EpubConfig _config;
   final debounce = Debounce(Duration(milliseconds: 300));
   late LibraryApi libraryApi;
-  late EpubMeta meta;
+  late ChapterMeta meta;
 
   @override
   void initState() {
@@ -41,9 +45,10 @@ class _EpubScreenState extends State<EpubScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _subscription.cancel();
     _configController.close();
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    super.dispose();
   }
 
   void _init() async {
@@ -52,7 +57,7 @@ class _EpubScreenState extends State<EpubScreen> {
     _configController = StreamController<EpubConfig>();
     final book = await EpubReader.readBook(bytes);
     print('Book Loaded');
-    meta = EpubMeta.fromEpub(book);
+    meta = ChapterMeta.fromEpub(book);
     _controller =
         EpubController(document: book, position: widget.book.position);
     _config = await libraryApi.loadConfig();
@@ -73,21 +78,15 @@ class _EpubScreenState extends State<EpubScreen> {
           ));
       });
     });
-    print('UI Updated');
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
+
+  void goToPage() async {
+    FancyDialog.field(context, label: 'Page Number');
   }
 
   void showMeaning(String word) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return BottomSheet(
-          builder: (BuildContext context) {
-            return HomeScreen(word: word);
-          },
-          onClosing: () {},
-        );
-      },
-    );
+    Pages.findWord(context, word: word);
   }
 
   void showChapters() async {

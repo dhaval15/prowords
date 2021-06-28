@@ -7,6 +7,7 @@ import 'package:prowords/src/utils/epub_config.dart';
 
 import 'chapter_overview_page.dart';
 import 'epub_config_page.dart';
+import 'find_word_page.dart';
 
 export 'epub_config_page.dart';
 export 'chapter_overview_page.dart';
@@ -46,6 +47,25 @@ class Pages {
           return ChapterViewPage(
             controller: controller,
             chapters: chapters,
+          );
+        },
+      ),
+    );
+  }
+
+  static Future findWord(BuildContext context, {required String word}) async {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        initialChildSize: 0.4,
+        expand: false,
+        builder: (context, controller) {
+          return FindWordPage(
+            controller: controller,
+            word: word,
           );
         },
       ),

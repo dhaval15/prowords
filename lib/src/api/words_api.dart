@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'compute.dart';
 
 import 'urban_dictionary.dart';
@@ -15,6 +17,12 @@ class WordsApi {
     final frequency = await _ReplaceFrequencyTask(word, historyPath).execute();
     final meanings = definitions.map((e) => WordMeaning.from(e)).toList();
     return WordDefineResult(meanings, frequency);
+  }
+
+  Future<List<String>> recentWords() async {
+    final file = File(historyPath);
+    if (await file.exists()) return file.readAsLines();
+    return [];
   }
 }
 

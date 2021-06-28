@@ -11,7 +11,7 @@ class StyledEpubView extends StatelessWidget {
   final EpubConfig config;
   final List<ActionButton> actions;
   final void Function(EpubBook? document)? onDocumentLoaded;
-  final EpubMeta meta;
+  final ChapterMeta meta;
   final GestureTapCallback? onTapBattery;
   final GestureTapCallback? onTapChapter;
   final GestureTapCallback? onTapProgress;

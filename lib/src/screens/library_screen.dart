@@ -31,7 +31,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final result = await FilesystemPicker.open(
       context: context,
       pickText: 'Open A Book',
+      title: 'Open A Book',
       fsType: FilesystemType.file,
+      folderIconColor: Scheme.of(context).onBackground,
       rootDirectory: Directory(path),
       fileTileSelectMode: FileTileSelectMode.wholeTile,
       allowedExtensions: ['.epub'],

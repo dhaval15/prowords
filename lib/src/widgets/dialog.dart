@@ -255,6 +255,7 @@ class FieldDialog extends StatefulWidget {
   final IconData no;
   final String value;
   final String? Function(String? text)? validator;
+  final TextInputType? inputType;
 
   const FieldDialog({
     required this.label,
@@ -262,6 +263,7 @@ class FieldDialog extends StatefulWidget {
     this.no = Icons.close,
     this.validator,
     this.value = '',
+    this.inputType,
   });
 
   @override
@@ -292,6 +294,7 @@ class _FieldDialogState extends State<FieldDialog> {
           child: TextFormField(
             controller: TextEditingController(text: _text),
             validator: widget.validator,
+            keyboardType: widget.inputType,
             onSaved: (text) {
               _text = text!;
             },

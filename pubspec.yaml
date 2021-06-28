@@ -38,7 +38,6 @@ dependencies:
   material_design_icons_flutter: 5.0.5955-rc.1
   frooti:
     path: ../packages/frooti
-  file_picker: ^3.0.3
   path_provider: ^2.0.2
   permission_handler: ^8.1.1
   filesystem_picker: ^2.0.0-nullsafety.0
@@ -46,6 +45,7 @@ dependencies:
   flutter_colorpicker: ^0.4.0
 
 dev_dependencies:
+  flutter_launcher_icons:
   flutter_test:
     sdk: flutter
 
@@ -53,6 +53,11 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "app_icon.png"
+
 flutter:
 
   # The following line ensures that the Material Icons font is

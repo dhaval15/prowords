@@ -26,7 +26,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: DrawerIcon(),
-        title: Text('Recents'),
+        title: Text('Reading'),
       ),
       body: StreamListBuilder<BookData>(
         padding: const EdgeInsets.all(16),

@@ -88,6 +88,17 @@ class _EpubConfigScreenState extends State<EpubConfigScreen> {
                     },
                   ),
                   IntSlider(
+                    label: 'Font Weight',
+                    value: _config.fontWeight.index + 1,
+                    min: 1,
+                    max: 9,
+                    onChanged: (value) {
+                      _config = _config.copyWith(
+                          fontWeight: FontWeight.values[value - 1]);
+                      _controller.add(_config);
+                    },
+                  ),
+                  IntSlider(
                     label: 'Indent',
                     value: _config.indent.length,
                     min: 0,

@@ -34,8 +34,7 @@ class _AppDrawerScreenState extends State<AppDrawerScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // _tile(context, 'Reading', Screens.EPUB),
-                        _tile(context, 'Recents', Screens.RECENTS),
+                        _tile(context, 'Reading', Screens.RECENTS),
                         _tile(context, 'Library', Screens.LIBRARY),
                         // _tile(context, 'Words', Screens.WORDS),
                         ListTile(
@@ -49,6 +48,7 @@ class _AppDrawerScreenState extends State<AppDrawerScreen> {
                               await api.saveConfig(config);
                           },
                         ),
+                        _tile(context, 'Recents', Screens.RECENT_WORDS),
                         // _tile(context, 'Settings', Screens.SETTINGS),
                       ],
                     ),

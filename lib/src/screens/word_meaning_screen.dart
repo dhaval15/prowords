@@ -7,7 +7,10 @@ import 'screens.dart';
 class WordMeaningScreen extends StatelessWidget {
   final WordMeaning meaning;
 
-  const WordMeaningScreen({required this.meaning});
+  const WordMeaningScreen({
+    required this.meaning,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
