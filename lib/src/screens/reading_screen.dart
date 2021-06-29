@@ -7,12 +7,12 @@ import '../styles/styles.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
-class RecentsScreen extends StatefulWidget {
+class ReadingScreen extends StatefulWidget {
   @override
-  _RecentsScreenState createState() => _RecentsScreenState();
+  _ReadingScreenState createState() => _ReadingScreenState();
 }
 
-class _RecentsScreenState extends State<RecentsScreen> {
+class _ReadingScreenState extends State<ReadingScreen> {
   late RecentsLoader loader;
   @override
   void initState() {

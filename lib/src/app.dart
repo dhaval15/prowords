@@ -67,10 +67,16 @@ Future<List> _initializeLinuxApis() async {
     dbPath: 'books.db',
   );
   await libraryApi.init();
+  final bookmarksApi = BookmarksApi(
+    store: stringMapStoreFactory.store('bookmarks'),
+    dbPath: 'bookmarks.db',
+  );
+  await bookmarksApi.init();
   return [
     dictonaryApi,
     wordsApi,
     libraryApi,
+    bookmarksApi,
   ];
 }
 
@@ -92,10 +98,16 @@ Future<List> _initializeAndroidApis() async {
       dbPath: join(path, 'books.db'),
     );
     await libraryApi.init();
+    final bookmarksApi = BookmarksApi(
+      store: stringMapStoreFactory.store('bookmarks'),
+      dbPath: join(path, 'bookmarks.db'),
+    );
+    await bookmarksApi.init();
     return [
       dictonaryApi,
       wordsApi,
       libraryApi,
+      bookmarksApi,
     ];
   }
   throw 'You have denied Access';

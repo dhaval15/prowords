@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../utils/utils.dart';
 import '../api/api.dart';
+import 'bookmarks_screen.dart';
 import 'epub_config_screen.dart';
 import 'home_screen.dart';
 import 'library_screen.dart';
-import 'recents_screen.dart';
+import 'reading_screen.dart';
+import 'saved_meanings_screen.dart';
 import 'word_meaning_screen.dart';
 import 'add_word_meaning_screen.dart';
 import 'epub_screen.dart';
@@ -16,7 +18,7 @@ class Screens {
   static const APP_DRAWER = '/';
   static const HOME = '/home';
   static const LIBRARY = '/library';
-  static const RECENTS = '/recents';
+  static const READING = '/reading';
   static const WORD_MEANING = '/word_meaning';
   static const ADD_WORD_MEANING = '/add_word_meaning';
   static const EPUB = '/epub';
@@ -24,6 +26,8 @@ class Screens {
   static const SETTINGS = '/settings';
   static const WORDS = '/words';
   static const RECENT_WORDS = '/recent_words';
+  static const SAVED_MEANINGS = '/saved_meanings';
+  static const BOOKMARKS = '/bookmarks';
 
   static Route? onGenerateRoute(RouteSettings settings) {
     print(
@@ -42,8 +46,10 @@ class Screens {
     APP_DRAWER: (context, args) => AppDrawerScreen(),
     HOME: (context, args) => HomeScreen(word: args as String?),
     LIBRARY: (context, args) => LibraryScreen(),
-    RECENTS: (context, args) => RecentsScreen(),
+    READING: (context, args) => ReadingScreen(),
+    WORDS: (context, args) => SavedMeaningsScreen(),
     RECENT_WORDS: (context, args) => RecentWordsScreen(),
+    BOOKMARKS: (context, args) => BookmarksScreen(),
     WORD_MEANING: (context, args) =>
         WordMeaningScreen(meaning: args as WordMeaning),
     ADD_WORD_MEANING: (context, args) =>

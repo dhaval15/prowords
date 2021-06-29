@@ -11,15 +11,16 @@ const double _kToolbarContentDistance = 8.0;
 
 class _TextSelectionToolbar extends StatelessWidget {
   const _TextSelectionToolbar({
-    required this.actions,
+    required this.actionsBuilder,
     required this.text,
   });
 
-  final List<Widget> actions;
+  final List<Widget> Function(String text) actionsBuilder;
   final String text;
 
   @override
   Widget build(BuildContext context) {
+    final actions = actionsBuilder(text);
     if (actions.isEmpty) {
       return Container(width: 0.0, height: 0.0);
     }
@@ -28,13 +29,10 @@ class _TextSelectionToolbar extends StatelessWidget {
       elevation: 1.0,
       child: Container(
         padding: const EdgeInsets.all(8),
-        child: _SelectedTextProvider(
-          text: text,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: actions,
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: actions,
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
       ),
     );
@@ -100,9 +98,10 @@ class _TextSelectionHandlePainter extends CustomPainter {
 }
 
 class CustomTextSelectionControls extends TextSelectionControls {
-  final List<ActionButton> actions;
+  final List<Widget> Function(String text) actionsBuilder;
 
-  CustomTextSelectionControls({required this.actions});
+  CustomTextSelectionControls({required this.actionsBuilder});
+
   @override
   Size getHandleSize(double textLineHeight) =>
       const Size(_kHandleSize, _kHandleSize);
@@ -148,7 +147,7 @@ class CustomTextSelectionControls extends TextSelectionControls {
         ),
         child: _TextSelectionToolbar(
           text: selectedText,
-          actions: actions,
+          actionsBuilder: actionsBuilder,
         ),
       ),
     );
@@ -206,7 +205,7 @@ class CustomTextSelectionControls extends TextSelectionControls {
 
 class ActionButton extends StatelessWidget {
   final String label;
-  final void Function(String text)? onTap;
+  final void Function()? onTap;
 
   const ActionButton({
     required this.label,
@@ -217,7 +216,7 @@ class ActionButton extends StatelessWidget {
     return InkWell(
       onTap: onTap != null
           ? () {
-              onTap!.call(_SelectedTextProvider.of(context).text);
+              onTap!.call();
             }
           : null,
       child: Padding(
@@ -225,23 +224,5 @@ class ActionButton extends StatelessWidget {
         child: Text(label),
       ),
     );
-  }
-}
-
-class _SelectedTextProvider extends StatelessWidget {
-  final Widget child;
-  final String text;
-
-  const _SelectedTextProvider({
-    required this.text,
-    required this.child,
-  });
-
-  factory _SelectedTextProvider.of(BuildContext context) =>
-      context.findAncestorWidgetOfExactType<_SelectedTextProvider>()!;
-
-  @override
-  Widget build(BuildContext context) {
-    return child;
   }
 }

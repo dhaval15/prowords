@@ -15,8 +15,6 @@ class CurrentMeta {
         .split('<p')
         .take(value.paragraphNumber)
         .join('<p'));
-    print('Chapter Number: ${value.chapterNumber}');
-    print('Start : ${meta.find(value.chapterNumber)?.start}');
     final currentPage =
         (meta.find(value.chapterNumber)?.start ?? 0) + currentPageInChapter;
     return CurrentMeta(currentPageInChapter, currentPage);
@@ -80,7 +78,6 @@ class ChapterMeta {
       meta.sub.add(subMeta);
     }
     meta._calculate();
-    print('Largest $index');
     return meta;
   }
 
@@ -177,10 +174,10 @@ int _getPageCountAccurate(String epubHtml) {
   }
 
   // Using 31 lines instead of 32 used by APNX to get the numbers similar
-  final count = lines.length ~/ 31;
+  final count = lines.length ~/ 15;
   // We could still have a really weird document and massively understate
   // As a backstop count the characters using the "fast count" algorithm
   // and use that number instead
-  final fastCount = epubHtml.length ~/ 2400 + 1;
+  final fastCount = epubHtml.length ~/ 1200 + 1;
   return max(count, fastCount);
 }

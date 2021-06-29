@@ -47,7 +47,6 @@ class UrbanDictionary {
     }
 
     try {
-      print(response.data);
       final raw = response.data['list'] as List<dynamic>;
       return raw.map((e) => Definition.fromJson(e)).toList();
     } catch (e) {

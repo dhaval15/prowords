@@ -34,9 +34,10 @@ class _AppDrawerScreenState extends State<AppDrawerScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _tile(context, 'Reading', Screens.RECENTS),
+                        _tile(context, 'Reading', Screens.READING),
                         _tile(context, 'Library', Screens.LIBRARY),
-                        // _tile(context, 'Words', Screens.WORDS),
+                        _tile(context, 'Words', Screens.WORDS),
+                        _tile(context, 'Bookmarks', Screens.BOOKMARKS),
                         ListTile(
                           title: Text('Options'),
                           onTap: () async {
@@ -60,7 +61,7 @@ class _AppDrawerScreenState extends State<AppDrawerScreen> {
         ),
         controller: controller,
         onGenerateRoute: Screens.onGenerateRoute,
-        initialRoute: Screens.RECENTS,
+        initialRoute: Screens.READING,
       ),
     );
   }

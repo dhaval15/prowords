@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frooti/frooti.dart';
 import 'package:prowords/src/api/providers.dart';
 import 'package:prowords/src/api/words_api.dart';
 import 'package:prowords/src/styles/styles.dart';
@@ -9,6 +10,7 @@ class RecentWordsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: DrawerIcon(),
         title: Text('Recent Words'),
       ),
       body: DefaultTextStyle(

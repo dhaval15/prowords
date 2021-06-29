@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:frooti/frooti.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prowords/src/api/api.dart';
 import 'package:prowords/src/pages/pages.dart';
@@ -67,11 +68,14 @@ class _EpubConfigScreenState extends State<EpubConfigScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            StreamBuilder<EpubConfig>(
-              initialData: _config,
-              stream: _controller.stream,
-              builder: (context, snapshot) =>
-                  LivePreview(config: snapshot.data!),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: StreamBuilder<EpubConfig>(
+                initialData: _config,
+                stream: _controller.stream,
+                builder: (context, snapshot) =>
+                    LivePreview(config: snapshot.data!),
+              ),
             ),
             Expanded(
               child: ListView(
@@ -141,7 +145,7 @@ class _EpubConfigScreenState extends State<EpubConfigScreen> {
                       _controller.add(_config);
                     },
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   DropdownField(
                     label: 'Text Align',
                     options: TextAlign.values
@@ -181,7 +185,7 @@ class _EpubConfigScreenState extends State<EpubConfigScreen> {
                       _controller.add(_config);
                     },
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   DropdownField(
                     label: 'Font',
                     options: options,

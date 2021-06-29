@@ -5,11 +5,12 @@ import 'package:prowords/src/pages/pages.dart';
 import '../utils/utils.dart';
 import 'custom_text_selection_controls.dart';
 import 'epub_statusbar.dart';
+import 'swiper.dart';
 
 class StyledEpubView extends StatelessWidget {
   final EpubController controller;
   final EpubConfig config;
-  final List<ActionButton> actions;
+  final List<Widget> Function(String text) actionsBuilder;
   final void Function(EpubBook? document)? onDocumentLoaded;
   final ChapterMeta meta;
   final GestureTapCallback? onTapBattery;
@@ -20,7 +21,7 @@ class StyledEpubView extends StatelessWidget {
     required this.controller,
     required this.config,
     required this.meta,
-    required this.actions,
+    required this.actionsBuilder,
     this.onDocumentLoaded,
     this.onTapBattery,
     this.onTapChapter,
@@ -48,21 +49,23 @@ class StyledEpubView extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: config.padding),
-              child: EpubView(
-                controller: controller,
-                textAlign: config.textAlign,
-                textStyle: config.textStyle,
-                onDocumentLoaded: onDocumentLoaded,
-                paragraphPadding: EdgeInsets.zero,
-                selectionControls: CustomTextSelectionControls(
-                  actions: actions,
+              child: Swiper(
+                child: EpubView(
+                  controller: controller,
+                  textAlign: config.textAlign,
+                  textStyle: config.textStyle,
+                  onDocumentLoaded: onDocumentLoaded,
+                  paragraphPadding: EdgeInsets.zero,
+                  selectionControls: CustomTextSelectionControls(
+                    actionsBuilder: actionsBuilder,
+                  ),
+                  dividerBuilder: (chapter) => ChapterTitle(
+                    title: chapter.Title ?? '',
+                    textColor: config.fontColor,
+                  ),
+                  indent: config.indent,
+                  paragraphGap: config.paragraphSpacing / 2,
                 ),
-                dividerBuilder: (chapter) => ChapterTitle(
-                  title: chapter.Title ?? '',
-                  textColor: config.fontColor,
-                ),
-                indent: config.indent,
-                paragraphGap: config.paragraphSpacing / 2,
               ),
             ),
           ),
@@ -77,6 +80,7 @@ class StyledEpubView extends StatelessWidget {
                     textColor: config.fontColor.withOpacity(0.6),
                     onTapChapter: onTapChapter,
                     onTapBattery: onTapBattery,
+                    onTapProgress: onTapProgress,
                   )
                 : SizedBox(),
           ),

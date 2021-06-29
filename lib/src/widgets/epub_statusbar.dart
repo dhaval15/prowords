@@ -4,6 +4,7 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
 import '../utils/utils.dart';
+import 'swiper.dart';
 
 class EpubStatusbar extends StatelessWidget {
   final EpubController controller;
@@ -38,7 +39,7 @@ class EpubStatusbar extends StatelessWidget {
             currentMeta = CurrentMeta.from(book, cv, meta);
             percentage = ((currentMeta.currentPage / meta.totalPages) * 100)
                 .toStringAsFixed(1);
-            // percentage = '${currentMeta.currentPage}/${cMeta.totalPages}';
+            // percentage = '${currentMeta.currentPage}/${meta.totalPages}';
             chapterHint =
                 ' (${currentMeta.currentPageInChapter}/${meta.find(cv.chapterNumber)?.totalPages})';
           } catch (e) {

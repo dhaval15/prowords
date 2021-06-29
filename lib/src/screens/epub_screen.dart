@@ -3,18 +3,15 @@ import 'dart:io';
 
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:fullscreen/fullscreen.dart';
 import 'package:prowords/src/pages/pages.dart';
 import 'package:prowords/src/screens/epub_config_screen.dart';
-import 'package:prowords/src/styles/styles.dart';
+import 'package:screen/screen.dart';
 
 import '../api/api.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
 import '../widgets/widgets.dart';
-import 'home_screen.dart';
 
 class EpubScreen extends StatefulWidget {
   final RecentsLoader? loader;
@@ -36,6 +33,7 @@ class _EpubScreenState extends State<EpubScreen> {
   final debounce = Debounce(Duration(milliseconds: 300));
   late LibraryApi libraryApi;
   late ChapterMeta meta;
+  late BookData _book;
 
   @override
   void initState() {
@@ -48,34 +46,31 @@ class _EpubScreenState extends State<EpubScreen> {
     _subscription.cancel();
     _configController.close();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    Screen.restore();
     super.dispose();
   }
 
   void _init() async {
+    _book = widget.book;
     libraryApi = Providers.of<LibraryApi>(context);
-    final bytes = File(widget.book.filePath).readAsBytes();
+    final bytes = File(_book.filePath).readAsBytes();
     _configController = StreamController<EpubConfig>();
     final book = await EpubReader.readBook(bytes);
-    print('Book Loaded');
     meta = ChapterMeta.fromEpub(book);
-    _controller =
-        EpubController(document: book, position: widget.book.position);
+    _controller = EpubController(document: book, position: _book.position);
     _config = await libraryApi.loadConfig();
-    print('Config Loaded');
     _configController.add(_config);
     _subscription = _controller.currentValueStream.listen((event) {
       debounce.execute(() {
         final position = event!.position.index;
+        _book = _book.copyWith(
+          position: position,
+          readAt: DateTime.now(),
+        );
         if (widget.loader != null)
-          widget.loader!.update(widget.book.copyWith(
-            position: position,
-            readAt: DateTime.now(),
-          ));
+          widget.loader!.update(_book);
         else
-          libraryApi.updateBook(widget.book.copyWith(
-            position: position,
-            readAt: DateTime.now(),
-          ));
+          libraryApi.updateBook(_book);
       });
     });
     SystemChrome.setEnabledSystemUIOverlays([]);
@@ -108,6 +103,28 @@ class _EpubScreenState extends State<EpubScreen> {
     }
   }
 
+  void addProse(String text) async {
+    addBookmark(text, ['PROSE']);
+  }
+
+  void addWord(String word) async {
+    addBookmark(word, ['WORD']);
+  }
+
+  void addBookmark(String text, [List<String> tags = const []]) async {
+    Pages.addBookmark(
+      context,
+      bookmark: Bookmark(
+        position: _controller.position!,
+        text: text,
+        tags: tags,
+        title: _book.title,
+        path: _book.filePath,
+        bookId: _book.id!,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,19 +138,26 @@ class _EpubScreenState extends State<EpubScreen> {
                 config: snapshot.data!,
                 onTapBattery: showConfig,
                 onTapChapter: showChapters,
-                actions: [
+                onTapProgress: () => Pages.showBrightnessControlPage(context),
+                actionsBuilder: (selection) => [
                   ActionButton(
-                    label: 'Meaning',
-                    onTap: showMeaning,
+                    label: 'Search',
+                    onTap: () => showMeaning(selection),
                   ),
                   ActionButton(
                     label: 'Bookmark',
-                    onTap: (text) {},
+                    onTap: () => addBookmark(selection),
                   ),
-                  ActionButton(
-                    label: 'Save Word',
-                    onTap: (text) {},
-                  ),
+                  if (selection.contains(' '))
+                    ActionButton(
+                      label: 'Prose',
+                      onTap: () => addProse(selection),
+                    ),
+                  if (!selection.contains(' '))
+                    ActionButton(
+                      label: 'Word',
+                      onTap: () => addWord(selection),
+                    ),
                 ],
                 meta: meta,
               );
