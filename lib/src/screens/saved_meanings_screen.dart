@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frooti/frooti.dart';
+import '../dictionary/dictionary.dart';
 import '../widgets/widgets.dart';
 import '../api/api.dart';
 import 'screens.dart';
@@ -15,14 +16,14 @@ class SavedMeaningsScreen extends StatelessWidget {
         title: Text('Saved Words'),
       ),
       body: SafeArea(
-        child: FutureListBuilder<WordMeaning>(
+        child: FutureListBuilder<dynamic>(
           padding: const EdgeInsets.all(8),
           future: Providers.of<PersonalDictionaryApi>(context).all(),
           builder: (context, meaning) => Container(
             color: bg,
             margin: EdgeInsets.only(bottom: 8),
-            child: WordMeaningTile(
-              meaning: meaning,
+            child: UrbanWordDefinitionTile(
+              definition: meaning,
               onTap: () {
                 Navigator.of(context)
                     .pushNamed(Screens.WORD_MEANING, arguments: meaning);

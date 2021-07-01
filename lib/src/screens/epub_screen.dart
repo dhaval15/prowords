@@ -32,7 +32,6 @@ class _EpubScreenState extends State<EpubScreen> {
   late EpubConfig _config;
   final debounce = Debounce(Duration(milliseconds: 300));
   late LibraryApi libraryApi;
-  late ChapterMeta meta;
   late BookData _book;
 
   @override
@@ -56,7 +55,6 @@ class _EpubScreenState extends State<EpubScreen> {
     final bytes = File(_book.filePath).readAsBytes();
     _configController = StreamController<EpubConfig>();
     final book = await EpubReader.readBook(bytes);
-    meta = ChapterMeta.fromEpub(book);
     _controller = EpubController(document: book, position: _book.position);
     _config = await libraryApi.loadConfig();
     _configController.add(_config);
@@ -86,10 +84,16 @@ class _EpubScreenState extends State<EpubScreen> {
 
   void showChapters() async {
     final chapters = await _controller.tableOfContentsStream.first;
-    final position = await Pages.showChapterOverViewPage(
-      context,
-      chapters: chapters!,
-    );
+    final position =
+        await Pages.showChapterOverViewPage(context, chapters: chapters!);
+    if (position is int) {
+      _controller.jumpTo(index: position);
+    }
+  }
+
+  void showChaptersV2() async {
+    final meta = await _controller.metaStream.first;
+    final position = await Pages.showChapterOverViewPageV2(context, meta: meta);
     if (position is int) {
       _controller.jumpTo(index: position);
     }
@@ -137,7 +141,7 @@ class _EpubScreenState extends State<EpubScreen> {
                 controller: _controller,
                 config: snapshot.data!,
                 onTapBattery: showConfig,
-                onTapChapter: showChapters,
+                onTapChapter: showChaptersV2,
                 onTapProgress: () => Pages.showBrightnessControlPage(context),
                 actionsBuilder: (selection) => [
                   ActionButton(
@@ -159,13 +163,17 @@ class _EpubScreenState extends State<EpubScreen> {
                       onTap: () => addWord(selection),
                     ),
                 ],
-                meta: meta,
               );
             return Center(
               child: BouncingDotsIndiactor(),
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          print((await _controller.document).Chapters);
+        },
       ),
     );
   }

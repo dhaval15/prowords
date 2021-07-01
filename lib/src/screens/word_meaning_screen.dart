@@ -5,7 +5,7 @@ import '../widgets/widgets.dart';
 import 'screens.dart';
 
 class WordMeaningScreen extends StatelessWidget {
-  final WordMeaning meaning;
+  final dynamic meaning;
 
   const WordMeaningScreen({
     required this.meaning,

@@ -1,4 +1,3 @@
-import 'package:prowords/src/api/words_api.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
@@ -47,7 +46,7 @@ class PersonalDictionaryApi {
   List<DictionaryEntry> _mapRecordsToEntries(List<RecordSnapshot> records) =>
       records.map((e) => DictionaryEntry.from(e.value)).toList();
 
-  Future<DictionaryEntry?> checkWordForEntry(WordMeaning meaning) async {
+  Future<DictionaryEntry?> checkWordForEntry(dynamic meaning) async {
     final records = await store.find(
       db,
       finder: Finder(
@@ -65,23 +64,23 @@ class PersonalDictionaryApi {
   }
 }
 
-class DictionaryEntry extends WordMeaning {
+class DictionaryEntry {
   final String? id;
+  final String word;
+  final String definition;
+  final String example;
   final int frequency;
   final List<String> tags;
 
   DictionaryEntry({
     this.id,
-    required String word,
-    required String definition,
-    required String example,
+    required this.word,
+    required this.definition,
+    required this.example,
     required this.frequency,
     required this.tags,
-  }) : super(
-          word: word,
-          definition: definition,
-          example: example,
-        );
+  });
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'frequency': frequency,
@@ -123,16 +122,6 @@ class DictionaryEntry extends WordMeaning {
         definition: definition,
         example: example,
         frequency: frequency + 1,
-        tags: tags,
-      );
-}
-
-extension WordMeaningExtension on WordMeaning {
-  DictionaryEntry toEntry(List<String> tags) => DictionaryEntry(
-        word: word,
-        definition: definition,
-        example: example,
-        frequency: 0,
         tags: tags,
       );
 }

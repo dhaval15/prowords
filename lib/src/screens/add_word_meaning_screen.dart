@@ -5,7 +5,7 @@ import '../widgets/widgets.dart';
 import '../api/api.dart';
 
 class AddWordMeaningScreen extends StatefulWidget {
-  final WordMeaning meaning;
+  final dynamic meaning;
 
   const AddWordMeaningScreen({
     required this.meaning,

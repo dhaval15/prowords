@@ -5,14 +5,12 @@ import 'package:prowords/src/pages/pages.dart';
 import '../utils/utils.dart';
 import 'custom_text_selection_controls.dart';
 import 'epub_statusbar.dart';
-import 'swiper.dart';
 
 class StyledEpubView extends StatelessWidget {
   final EpubController controller;
   final EpubConfig config;
   final List<Widget> Function(String text) actionsBuilder;
   final void Function(EpubBook? document)? onDocumentLoaded;
-  final ChapterMeta meta;
   final GestureTapCallback? onTapBattery;
   final GestureTapCallback? onTapChapter;
   final GestureTapCallback? onTapProgress;
@@ -20,7 +18,6 @@ class StyledEpubView extends StatelessWidget {
   const StyledEpubView({
     required this.controller,
     required this.config,
-    required this.meta,
     required this.actionsBuilder,
     this.onDocumentLoaded,
     this.onTapBattery,
@@ -49,23 +46,21 @@ class StyledEpubView extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: config.padding),
-              child: Swiper(
-                child: EpubView(
-                  controller: controller,
-                  textAlign: config.textAlign,
-                  textStyle: config.textStyle,
-                  onDocumentLoaded: onDocumentLoaded,
-                  paragraphPadding: EdgeInsets.zero,
-                  selectionControls: CustomTextSelectionControls(
-                    actionsBuilder: actionsBuilder,
-                  ),
-                  dividerBuilder: (chapter) => ChapterTitle(
-                    title: chapter.Title ?? '',
-                    textColor: config.fontColor,
-                  ),
-                  indent: config.indent,
-                  paragraphGap: config.paragraphSpacing / 2,
+              child: EpubView(
+                controller: controller,
+                textAlign: config.textAlign,
+                textStyle: config.textStyle,
+                onDocumentLoaded: onDocumentLoaded,
+                paragraphPadding: EdgeInsets.zero,
+                selectionControls: CustomTextSelectionControls(
+                  actionsBuilder: actionsBuilder,
                 ),
+                dividerBuilder: (chapter) => ChapterTitle(
+                  title: chapter.Title ?? '',
+                  textColor: config.fontColor,
+                ),
+                indent: config.indent,
+                paragraphGap: config.paragraphSpacing / 2,
               ),
             ),
           ),
@@ -74,7 +69,7 @@ class StyledEpubView extends StatelessWidget {
             future: Future.microtask(() => controller.document),
             builder: (context, snapshot) => snapshot.hasData
                 ? EpubStatusbar(
-                    meta: meta,
+                    meta: controller.meta!,
                     controller: controller,
                     book: snapshot.data!,
                     textColor: config.fontColor.withOpacity(0.6),

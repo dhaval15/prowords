@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import '../dictionary/dictionary.dart';
 
 import '../api/api.dart';
 import '../widgets/widgets.dart';
-import '../screens/screens.dart';
 
 class FindWordPage extends StatefulWidget {
   final String word;
@@ -18,10 +18,10 @@ class FindWordPage extends StatefulWidget {
 }
 
 class _FindWordPageState extends State<FindWordPage> {
-  WordDefineResult? result;
-  Future<WordDefineResult> fetchMeanings(BuildContext context) async {
+  DictionaryResult? result;
+  Future<DictionaryResult> fetchDictionaryResult(BuildContext context) async {
     if (result == null) {
-      result = await Providers.of<WordsApi>(context).define(widget.word);
+      result = await Providers.of<DictionaryApi>(context).define(widget.word);
     }
     return result!;
   }
@@ -30,58 +30,50 @@ class _FindWordPageState extends State<FindWordPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bg = theme.colorScheme.onBackground.withOpacity(0.04);
-    return FutureBuilder<WordDefineResult>(
-      future: fetchMeanings(context),
+    return FutureBuilder<DictionaryResult>(
+      future: fetchDictionaryResult(context),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final meanings = snapshot.data!.meanings;
+          final results = snapshot.data!.results;
           final frequency = snapshot.data!.frequency;
-          return ListView.builder(
+          return ListView(
             controller: widget.controller,
             physics: BouncingScrollPhysics(),
             padding: EdgeInsets.all(8),
-            itemCount: meanings.length + 1,
-            itemBuilder: (context, index) {
-              if (index == 0)
-                return Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.word,
-                        style: TextStyle(
-                          fontSize: 20,
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.w300,
-                        ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.word,
+                      style: TextStyle(
+                        fontSize: 20,
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.w300,
                       ),
-                      const Spacer(),
-                      Text(
-                        '$frequency',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: theme.hintColor,
-                          fontWeight: FontWeight.w300,
-                        ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '$frequency',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: theme.hintColor,
+                        fontWeight: FontWeight.w300,
                       ),
-                      const SizedBox(width: 4),
-                    ],
-                  ),
-                );
-              final meaning = meanings[index - 1];
-              return Container(
-                color: bg,
-                margin: EdgeInsets.only(bottom: 8),
-                child: WordMeaningTile(
-                  meaning: meaning,
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(Screens.WORD_MEANING, arguments: meaning);
-                  },
+                    ),
+                    const SizedBox(width: 4),
+                  ],
                 ),
-              );
-            },
+              ),
+              for (final result in results)
+                Container(
+                  color: bg,
+                  margin: EdgeInsets.only(bottom: 8),
+                  child: result.builder(result.data),
+                ),
+            ],
           );
         }
         if (snapshot.hasError)

@@ -32,7 +32,7 @@ dependencies:
   http: ^0.13.3
   sembast: ^3.1.0+2
   epub_view:
-    path: ../packages/epub_view
+    path: packages/epub_view
   google_fonts: ^2.1.0
   battery_plus: ^1.0.2
   material_design_icons_flutter: 5.0.5955-rc.1
@@ -45,7 +45,7 @@ dependencies:
   flutter_colorpicker: ^0.4.0
   simple_gesture_detector: ^0.2.0
   screen: 
-    path: ../packages/flutter_screen
+    path: packages/flutter_screen
 
 dev_dependencies:
   flutter_launcher_icons:

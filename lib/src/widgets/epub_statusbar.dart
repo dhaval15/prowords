@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
-import '../utils/utils.dart';
-import 'swiper.dart';
 
 class EpubStatusbar extends StatelessWidget {
   final EpubController controller;

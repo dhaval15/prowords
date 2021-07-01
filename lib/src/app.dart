@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:prowords/src/widgets/widgets.dart';
 import 'package:sembast/sembast.dart';
+import 'dictionary/dictionary.dart';
 import 'models/models.dart';
 import 'screens/screens.dart';
 import 'styles/styles.dart';
@@ -54,7 +55,6 @@ class ProwordsApp extends StatelessWidget {
 }
 
 Future<List> _initializeLinuxApis() async {
-  final wordsApi = WordsApi('/home/dhaval/Dev/space/prowords/recents.txt');
   final dictonaryApi = PersonalDictionaryApi(
     dbPath: 'dictionary.db',
     store: stringMapStoreFactory.store('mywords'),
@@ -73,8 +73,14 @@ Future<List> _initializeLinuxApis() async {
   );
   await bookmarksApi.init();
   return [
+    DictionaryApi(
+      historyPath: 'recents.txt',
+      dictionaries: [
+        DictionaryDotDev(),
+        UrbanDictionary(),
+      ],
+    ),
     dictonaryApi,
-    wordsApi,
     libraryApi,
     bookmarksApi,
   ];
@@ -85,7 +91,6 @@ Future<List> _initializeAndroidApis() async {
       (await Permission.storage.request() == PermissionStatus.granted)) {
     final dir = await getExternalStorageDirectory();
     final path = join(dir!.parent.parent.parent.parent.path, 'Prowords');
-    final wordsApi = WordsApi(join(path, 'recents.txt'));
     final dictonaryApi = PersonalDictionaryApi(
       dbPath: join(path, 'dictionary.db'),
       store: stringMapStoreFactory.store('mywords'),
@@ -104,8 +109,14 @@ Future<List> _initializeAndroidApis() async {
     );
     await bookmarksApi.init();
     return [
+      DictionaryApi(
+        historyPath: join(path, 'recents.txt'),
+        dictionaries: [
+          DictionaryDotDev(),
+          UrbanDictionary(),
+        ],
+      ),
       dictonaryApi,
-      wordsApi,
       libraryApi,
       bookmarksApi,
     ];

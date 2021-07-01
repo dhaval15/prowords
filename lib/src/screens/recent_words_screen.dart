@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frooti/frooti.dart';
 import 'package:prowords/src/api/providers.dart';
-import 'package:prowords/src/api/words_api.dart';
+// import 'package:prowords/src/api/words_api.dart';
 import 'package:prowords/src/styles/styles.dart';
 import 'package:prowords/src/widgets/widgets.dart';
 
@@ -20,7 +20,7 @@ class RecentWordsScreen extends StatelessWidget {
         ),
         child: FutureListBuilder<String>(
           padding: const EdgeInsets.all(16),
-          future: Providers.of<WordsApi>(context).recentWords(),
+          future: Providers.of(context).recentWords(),
           builder: (BuildContext context, model) {
             final splits = model.split(':');
             return Padding(

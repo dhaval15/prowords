@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../dictionary/dictionary.dart';
 import '../api/api.dart';
 import '../widgets/widgets.dart';
-import 'screens.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? word;
@@ -16,11 +16,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late String word;
-  Future<WordDefineResult> fetchMeanings(BuildContext context) =>
-      Future.microtask(() async {
-        word = widget.word ?? await IntentPlugin.getWord() ?? 'Prose';
-        return Providers.of<WordsApi>(context).define(word);
-      });
+  DictionaryResult? result;
+  Future<DictionaryResult> fetchDictionaryResult(BuildContext context) async {
+    word = widget.word ?? await IntentPlugin.getWord() ?? 'Prose';
+    if (result == null) {
+      result = await Providers.of<DictionaryApi>(context).define(word);
+    }
+    return result!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,56 +31,49 @@ class _HomeScreenState extends State<HomeScreen> {
     final bg = theme.colorScheme.onBackground.withOpacity(0.04);
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder<WordDefineResult>(
+        child: FutureBuilder<DictionaryResult>(
+          future: fetchDictionaryResult(context),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final meanings = snapshot.data!.meanings;
+              final results = snapshot.data!.results;
               final frequency = snapshot.data!.frequency;
-              return ListView.builder(
+              return ListView(
                 physics: BouncingScrollPhysics(),
                 padding: EdgeInsets.all(8),
-                itemCount: meanings.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0)
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            word,
-                            style: TextStyle(
-                              fontSize: 20,
-                              letterSpacing: 1,
-                              fontWeight: FontWeight.w300,
-                            ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          word,
+                          style: TextStyle(
+                            fontSize: 20,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w300,
                           ),
-                          const Spacer(),
-                          Text(
-                            '$frequency',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: theme.hintColor,
-                              fontWeight: FontWeight.w300,
-                            ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '$frequency',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: theme.hintColor,
+                            fontWeight: FontWeight.w300,
                           ),
-                          const SizedBox(width: 4),
-                        ],
-                      ),
-                    );
-                  final meaning = meanings[index - 1];
-                  return Container(
-                    color: bg,
-                    margin: EdgeInsets.only(bottom: 8),
-                    child: WordMeaningTile(
-                      meaning: meaning,
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Screens.WORD_MEANING,
-                            arguments: meaning);
-                      },
+                        ),
+                        const SizedBox(width: 4),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                  for (final result in results)
+                    Container(
+                      color: bg,
+                      margin: EdgeInsets.only(bottom: 8),
+                      child: result.builder(result.data),
+                    ),
+                ],
               );
             }
             if (snapshot.hasError)
@@ -88,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: BouncingDotsIndiactor(),
             );
           },
-          future: fetchMeanings(context),
         ),
       ),
     );

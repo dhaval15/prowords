@@ -50,10 +50,8 @@ class Screens {
     WORDS: (context, args) => SavedMeaningsScreen(),
     RECENT_WORDS: (context, args) => RecentWordsScreen(),
     BOOKMARKS: (context, args) => BookmarksScreen(),
-    WORD_MEANING: (context, args) =>
-        WordMeaningScreen(meaning: args as WordMeaning),
-    ADD_WORD_MEANING: (context, args) =>
-        AddWordMeaningScreen(meaning: args as WordMeaning),
+    WORD_MEANING: (context, args) => WordMeaningScreen(meaning: args),
+    ADD_WORD_MEANING: (context, args) => AddWordMeaningScreen(meaning: args),
     EPUB: (context, args) {
       final map = args as Map<Symbol, dynamic>;
       return EpubScreen(
